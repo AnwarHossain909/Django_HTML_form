@@ -1,21 +1,23 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Student
+from .import models
 
-def student_form(request):
+def home(request):
+    print(request.POST)
     if request.method == "POST":
         name = request.POST.get('name')
-        roll = request.POST.get('roll')
-        father_name = request.POST.get('father_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        password = request.POST.get('password')
+        checkbox = request.POST.get('checkbox')
 
-        # Save into DB
-        student = Student.objects.create(
-            name=name,
-            roll=roll,
-            father_name=father_name
-        )
+        if checkbox == 'on':
+            checkbox = True
+        else:
+            checkbox = False
+
+        student = models.Student(name = name, email = email, phone=phone, password=password, checkbox=checkbox)
         student.save()
+        return HttpResponse("student table created successfully")
 
-        return HttpResponse(f"Data saved! Name: {name}, Roll: {roll}, Father's Name: {father_name}")
-
-    return render(request, 'student/student_form.html')
+    return render(request, 'student/index.html')
